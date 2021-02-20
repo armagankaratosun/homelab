@@ -1,0 +1,90 @@
+---
+- name: FreeIPA Library Item Automation Script
+  hosts: all
+  become: true
+  become_user: root
+  become_method: sudo
+  
+  tasks:
+
+  - name: install --> required software
+    yum:
+     name: 
+      - ipa-server-dns
+      - ipa-server
+      - yum-cron
+     state: latest
+    async: 5
+    poll: 0
+    ignore_errors: true
+
+
+  - name: yum => update
+    command: yum update -y
+    async: 50
+    poll: 0
+    ignore_errors: true    
+
+  - name: selinux => set permissive mode
+    selinux:
+      policy: targeted
+      state: permissive
+
+ 
+  - name: ssh => disallow root SSH access
+    lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+
+  - name: yum-cron => configure yum-cron update_cmd
+    lineinfile: dest=/etc/yum/yum-cron.conf
+              regexp="^update_cmd "
+              line="update_cmd security"
+              state=present
+              
+  - name: yum-cron => configure yum-cron download_update
+    lineinfile: dest=/etc/yum/yum-cron.conf
+              regexp="^download_updates "
+              line="download_updates = yes"
+              state=present
+              
+  - name: yum-cron => configure yum-cron apply_updates
+    lineinfile: dest=/etc/yum/yum-cron.conf
+              regexp="^apply_updates "
+              line="apply_updates = yes"
+              state=present
+
+  - name: set --> FQDN
+    hostname: 
+     name: "{{inventory_hostname}}"
+
+  - name: delete --> /etc/hosts
+    file:
+     path: /etc/hosts
+     state: absent
+     
+  - name: create --> /etc/hosts
+    file:
+     path: /etc/hosts
+     owner: root
+     group: root
+     mode: '0644'
+     state: touch
+ 
+  - name: add --> /etc/hosts lines
+    blockinfile:
+     path: /etc/hosts
+     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+     block: |
+      {{ansible_default_ipv4.address}} {{inventory_hostname}}
+      
+  - name: install --> freeipa
+    shell: |
+      ipa-server-install -U --domain="{{ ldap_domain }}"  --mkhomedir --setup-dns --auto-reverse --auto-forwarders --realm="{{ ldap_domain|upper }}" --hostname="{{inventory_hostname}}" --ds-password="{{ ldap_passwd }}" --admin-password="{{ ldap_passwd }}"
+
+  - name: yum-cron => enable & restart
+    service:
+     name: yum-cron 
+     state: restarted
+     enabled: yes
