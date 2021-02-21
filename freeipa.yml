@@ -57,7 +57,7 @@
               regexp="^download_updates "
               line="download_updates = yes"
               state=present
-     when: ansible_facts['distribution_major_version'] == "7"
+    when: ansible_facts['distribution_major_version'] == "7"
           
   - name: yum-cron => configure yum-cron apply_updates
     lineinfile: dest=/etc/yum/yum-cron.conf
