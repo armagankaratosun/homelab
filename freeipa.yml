@@ -14,7 +14,7 @@
       - ipa-server
       - yum-cron
      state: latest
-     when: ansible_facts['distribution_major_version'] == "7"
+    when: ansible_facts['distribution_major_version'] == "7"
      
   - name: install --> Centos 8 required software
     yum:
@@ -23,7 +23,7 @@
       - "ipa-server-dns"
       - "freeipa-server"
      state: latest
-     when: ansible_facts['distribution_major_version'] == "8" 
+    when: ansible_facts['distribution_major_version'] == "8" 
    
   - name: yum => update
     command: yum update -y  
