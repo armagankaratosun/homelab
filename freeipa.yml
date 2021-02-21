@@ -1,5 +1,5 @@
 ---
-- name: FreeIPA Library Item Automation Script
+- name: Install FreeIPA 
   hosts: all
   become: true
   become_user: root
@@ -23,7 +23,12 @@
       policy: targeted
       state: permissive
 
- 
+  - name: firewalld => permit freeipa
+    firewalld:
+      service: freeipa-ldap
+      permanent: yes
+      state: enabled
+
   - name: ssh => disallow root SSH access
     lineinfile: dest=/etc/ssh/sshd_config
               regexp="^PermitRootLogin"
