@@ -41,6 +41,7 @@
       service: freeipa-ldap
       permanent: yes
       state: enabled
+      immediate: true
 
   - name: ssh => disallow root SSH access
     lineinfile: dest=/etc/ssh/sshd_config
