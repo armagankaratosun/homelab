@@ -19,9 +19,9 @@
   - name: install --> required software
     yum:
      name: 
-      - @idm:DL1
-      - ipa-server-dns
-      - freeipa-server
+      - "@idm:DL1"
+      - "ipa-server-dns"
+      - "freeipa-server"
      state: latest
      when: ansible_facts['distribution_major_version'] == "8" 
    
