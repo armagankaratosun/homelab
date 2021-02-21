@@ -14,16 +14,9 @@
       - ipa-server
       - yum-cron
      state: latest
-    async: 5
-    poll: 0
-    ignore_errors: true
-
 
   - name: yum => update
-    command: yum update -y
-    async: 50
-    poll: 0
-    ignore_errors: true    
+    command: yum update -y  
 
   - name: selinux => set permissive mode
     selinux:
