@@ -16,10 +16,16 @@
      state: latest
     when: ansible_facts['distribution_major_version'] == "7"
      
-  - name: install --> Centos 8 required software
+  - name: install --> Centos 8 IDM module
     yum:
      name: 
       - "@idm:DL1"
+     state: latest
+    when: ansible_facts['distribution_major_version'] == "8" 
+
+  - name: install --> Centos 8 required software
+    yum:
+     name: 
       - "ipa-server-dns"
       - "freeipa-server"
      state: latest
