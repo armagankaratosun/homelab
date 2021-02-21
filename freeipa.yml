@@ -17,10 +17,7 @@
     when: ansible_facts['distribution_major_version'] == "7"
      
   - name: install --> Centos 8 IDM module
-    yum:
-     name: 
-      - "@idm:DL1"
-     state: latest
+    shell: yum install -y @idm:DL1
     when: ansible_facts['distribution_major_version'] == "8" 
 
   - name: install --> Centos 8 required software
