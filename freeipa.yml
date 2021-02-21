@@ -14,7 +14,17 @@
       - ipa-server
       - yum-cron
      state: latest
-
+     when: ansible_facts['distribution_major_version'] == "7"
+     
+  - name: install --> required software
+    yum:
+     name: 
+      - @idm:DL1
+      - ipa-server-dns
+      - freeipa-server
+     state: latest
+     when: ansible_facts['distribution_major_version'] == "8" 
+   
   - name: yum => update
     command: yum update -y  
 
@@ -40,18 +50,21 @@
               regexp="^update_cmd "
               line="update_cmd security"
               state=present
-              
+    when: ansible_facts['distribution_major_version'] == "7"
+
   - name: yum-cron => configure yum-cron download_update
     lineinfile: dest=/etc/yum/yum-cron.conf
               regexp="^download_updates "
               line="download_updates = yes"
               state=present
-              
+     when: ansible_facts['distribution_major_version'] == "7"
+          
   - name: yum-cron => configure yum-cron apply_updates
     lineinfile: dest=/etc/yum/yum-cron.conf
               regexp="^apply_updates "
               line="apply_updates = yes"
               state=present
+    when: ansible_facts['distribution_major_version'] == "7"
 
   - name: set --> FQDN
     hostname: 
@@ -86,3 +99,4 @@
      name: yum-cron 
      state: restarted
      enabled: yes
+    when: ansible_facts['distribution_major_version'] == "7"
