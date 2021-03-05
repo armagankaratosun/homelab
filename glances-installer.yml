@@ -26,3 +26,19 @@
     pip:
      name: glances[all]
      executable: pip3
+
+  - name: copy => glancesweb.service
+    template:
+     src: glancesweb.service
+     dest: "/usr/lib/systemd/system/glancesweb.service"
+     mode: u=rw,g=r,o=
+     owner: root
+
+  - name: systemd => daemon-reload
+    systemd:
+     daemon_reload: yes
+
+  - name: systemd => daemon-reload
+    systemd:
+     name: glancesweb.service
+     state: started
