@@ -8,7 +8,7 @@
   
   tasks:
 
-  - name: install => pip3 [CentOS-RHEL]
+  - name: install => pip3 + gcc + python-devel [CentOS-RHEL]
     yum:
      name: 
      - python3-pip
