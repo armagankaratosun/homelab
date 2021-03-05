@@ -21,4 +21,4 @@
   - name: install => glances
     pip:
      name: glances[all]
-     executable: pip3.3
+     executable: pip3
