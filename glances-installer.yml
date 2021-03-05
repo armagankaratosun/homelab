@@ -10,7 +10,11 @@
 
   - name: install => pip3 [CentOS-RHEL]
     yum:
-     name: python3-pip
+     name: 
+     - python3-pip
+     - gcc
+     - python-devel
+     - python3-devel
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat'    
 
   - name: install => pip3 [Ubuntu-Debian]
