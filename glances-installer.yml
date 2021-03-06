@@ -46,3 +46,4 @@
     systemd:
      name: glancesweb.service
      state: started
+     enabled: yes
