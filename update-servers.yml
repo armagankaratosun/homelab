@@ -1,6 +1,6 @@
 ---
 - name: Update Servers 
-  hosts: "{{ hosts }}"
+  hosts: "{{ host_name }}"
   become: true
   become_user: root
   become_method: sudo
