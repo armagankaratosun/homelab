@@ -27,6 +27,10 @@
     register: package_update
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'    
 
+  - debug:
+      var: package_update
+    when: debug_mode is true
+
   - name: check => upgrade 
     async_status:
       jid: "{{ package_update.ansible_job_id }}"
