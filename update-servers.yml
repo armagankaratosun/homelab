@@ -14,7 +14,7 @@
       state: latest 
     async: 180 # the total time allowed to complete the package update task
     poll: 0 # Polling Interval in Seconds. No need to poll, fire and forget.
-    register: package_update    
+    register: yum_update    
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' 
 
   - name: upgrade  => [Ubuntu-Debian]
@@ -24,19 +24,24 @@
       force_apt_get: yes 
     async: 180 # the total time allowed to complete the package update task
     poll: 0 # Polling Interval in Seconds. No need to poll, fire and forget.
-    register: package_update
+    register: apt_update
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'    
 
   - name:  
     debug:
-      var: package_update
+      var: "{{ item }}"
+    with_items:
+       - yum_update
+       - apt_update
     when: debug_mode == true
 
   - name: check => upgrade 
     async_status:
-      jid: "{{ package_update.ansible_job_id }}"
+      jid: "{{ item.ansible_job_id }}"
+    with_items:
+       - yum_update
+       - apt_update
     register: job_result
     until: job_result.finished # Retry within limit until the job status changed to "finished": 1
     retries: 5 # Maximum number of retries to check job status
     delay: 10
-
