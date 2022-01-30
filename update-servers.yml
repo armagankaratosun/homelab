@@ -40,8 +40,8 @@
       jid: "{{ yum_update.ansible_job_id }}"
     register: job_result
     until: job_result.finished # Retry within limit until the job status changed to "finished": 1
-    retries: 5 # Maximum number of retries to check job status
-    delay: 10
+    retries: 50 # Maximum number of retries to check job status
+    delay: 30
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
 
   - name: check => apt upgrade
@@ -49,6 +49,6 @@
       jid: "{{ apt_update.ansible_job_id }}"
     register: job_result
     until: job_result.finished # Retry within limit until the job status changed to "finished": 1
-    retries: 5 # Maximum number of retries to check job status
-    delay: 10
+    retries: 50 # Maximum number of retries to check job status
+    delay: 30
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
