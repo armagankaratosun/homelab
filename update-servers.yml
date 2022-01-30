@@ -1,5 +1,5 @@
 ---
-- name: Install Glances 
+- name: Update Servers 
   hosts: {{ hosts }}
   become: true
   become_user: root
