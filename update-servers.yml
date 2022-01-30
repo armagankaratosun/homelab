@@ -13,7 +13,7 @@
       name: "*"
       state: latest 
     async: 180 # the total time allowed to complete the package update task
-    poll: 10 # Polling Interval in Seconds
+    poll: 0 # Polling Interval in Seconds. No need to poll, fire and forget.
     register: package_update    
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' 
 
@@ -23,7 +23,7 @@
       update_cache: yes
       force_apt_get: yes 
     async: 180 # the total time allowed to complete the package update task
-    poll: 10 # Polling Interval in Seconds
+    poll: 0 # Polling Interval in Seconds. No need to poll, fire and forget.
     register: package_update
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'    
 
@@ -33,4 +33,5 @@
     register: job_result
     until: job_result.finished # Retry within limit until the job status changed to "finished": 1
     retries: 5 # Maximum number of retries to check job status
+    delay: 10
 
