@@ -35,13 +35,20 @@
        - apt_update
     when: debug_mode == true
 
-  - name: check => upgrade 
+  - name: check => yum upgrade 
     async_status:
-      jid: "{{ item.ansible_job_id }}"
-    with_items:
-       - yum_update
-       - apt_update
+      jid: "{{ yum_update.ansible_job_id }}"
     register: job_result
     until: job_result.finished # Retry within limit until the job status changed to "finished": 1
     retries: 5 # Maximum number of retries to check job status
     delay: 10
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+
+  - name: check => apt upgrade
+    async_status:
+      jid: "{{ apt_update.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished # Retry within limit until the job status changed to "finished": 1
+    retries: 5 # Maximum number of retries to check job status
+    delay: 10
+    when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
