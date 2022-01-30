@@ -27,9 +27,10 @@
     register: package_update
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'    
 
-  - debug:
+  - name:  
+    debug:
       var: package_update
-    when: debug_mode is true
+    when: debug_mode == true
 
   - name: check => upgrade 
     async_status:
