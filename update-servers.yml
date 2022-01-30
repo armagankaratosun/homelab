@@ -12,8 +12,8 @@
     yum:
       name: "*"
       state: latest 
-      async: 180 # the total time allowed to complete the package update task
-      poll: 10 # Polling Interval in Seconds
+    async: 180 # the total time allowed to complete the package update task
+    poll: 10 # Polling Interval in Seconds
     register: package_update    
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' 
 
@@ -22,8 +22,8 @@
       upgrade: yes
       update_cache: yes
       force_apt_get: yes 
-      async: 180 # the total time allowed to complete the package update task
-      poll: 10 # Polling Interval in Seconds
+    async: 180 # the total time allowed to complete the package update task
+    poll: 10 # Polling Interval in Seconds
     register: package_update
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'    
 
