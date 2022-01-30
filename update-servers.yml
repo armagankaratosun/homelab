@@ -15,7 +15,7 @@
       async: 180 # the total time allowed to complete the package update task
       poll: 10 # Polling Interval in Seconds
     register: package_update    
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' 
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' 
 
   - name: upgrade  => [Ubuntu-Debian]
     apt:
