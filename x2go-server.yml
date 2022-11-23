@@ -27,9 +27,6 @@
      - mate-notification-daemon
      - x2goserver
      - x2goserver-xsession
-     - gcc
-     - python-dev
-     - python3-dev
      - fail2ban
     when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
     
