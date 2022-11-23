@@ -17,7 +17,7 @@
     shell: |
      yum groupinstall mate-desktop -y
      yum install x2goserver-xsession -y
-ignore_errors: true
+    ignore_errors: true
     
   - name: install --> required software
     yum:
