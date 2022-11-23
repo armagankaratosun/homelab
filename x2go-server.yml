@@ -7,17 +7,31 @@
   
   tasks:
   
-  - name: enable --> epel
+  - name: yum install --> epel
     yum:
      name: epel-release
      state: latest
-    ignore_errors: true
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat' 
 
-  - name: install --> x2go with mate-desktop
+  - name: yum install --> x2go with mate-desktop
     shell: |
      yum groupinstall mate-desktop -y
      yum install x2goserver-xsession -y
-    ignore_errors: true
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat' 
+
+  - name: apt install --> x2go with mate-desktop
+    apt:
+     name: 
+     - mate-core 
+     - mate-desktop-environment 
+     - mate-notification-daemon
+     - x2goserver
+     - x2goserver-xsession
+     - gcc
+     - python-dev
+     - python3-dev
+     - fail2ban
+    when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
     
   - name: install --> required software
     yum:
@@ -25,7 +39,7 @@
       - firewalld
       - fail2ban
      state: latest
-    ignore_errors: true
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat' 
 
   - name: ssh => enable password authentication
     lineinfile: dest=/etc/ssh/sshd_config
@@ -52,8 +66,8 @@
         line: |
          [sshd]
          enabled=true
-         # don't block localhost, local machines or EUMETSAT IPs
-         ignoreip=127.0.0.1/8 10.0.0.0/8 193.17.0.0/22
+         # don't block localhost or local machines
+         ignoreip=127.0.0.1/8 10.0.0.0/8 
         insertbefore: BOF
 
   - name: firewalld => enable & restart
@@ -61,7 +75,8 @@
      name: firewalld
      state: restarted
      enabled: yes
-     
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat' 
+    
   - name: fail2ban => enable & restart
     service:
      name: fail2ban
