@@ -1,0 +1,69 @@
+---
+- name: X2Go Server Library Item Automation Script
+  hosts: all
+  become: true
+  become_user: root
+  become_method: sudo
+  
+  tasks:
+  
+  - name: enable --> epel
+    yum:
+     name: epel-release
+     state: latest
+    ignore_errors: true
+
+  - name: install --> x2go with mate-desktop
+    shell: |
+     yum groupinstall mate-desktop -y
+     yum install x2goserver-xsession -y
+ignore_errors: true
+    
+  - name: install --> required software
+    yum:
+     name: 
+      - firewalld
+      - fail2ban
+     state: latest
+    ignore_errors: true
+
+  - name: ssh => enable password authentication
+    lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication yes"
+              state=present
+
+  - name: ssh => disallow root SSH access
+    lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+
+  - name: create => /etc/fail2ban/jail.d/ssh.conf 
+    file:
+        path: /etc/fail2ban/jail.d/ssh.conf
+        state: touch
+        mode: u=rw,g=r,o=r
+
+
+  - name: edit => /etc/fail2ban/jail.d/ssh.conf
+    lineinfile:
+        path: /etc/fail2ban/jail.d/ssh.conf
+        line: |
+         [sshd]
+         enabled=true
+         # don't block localhost, local machines or EUMETSAT IPs
+         ignoreip=127.0.0.1/8 10.0.0.0/8 193.17.0.0/22
+        insertbefore: BOF
+
+  - name: firewalld => enable & restart
+    service:
+     name: firewalld
+     state: restarted
+     enabled: yes
+     
+  - name: fail2ban => enable & restart
+    service:
+     name: fail2ban
+     state: restarted
+     enabled: yes
