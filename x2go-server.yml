@@ -1,6 +1,6 @@
 ---
 - name: X2Go Server Library Item Automation Script
-  hosts: all
+  hosts: "{{ host_name }}"
   become: true
   become_user: root
   become_method: sudo
